@@ -1,64 +1,67 @@
-var Sequelize = require('sequelize');
-var db = new Sequelize('postgres://localhost:5432/wikistack');
-// var db = new Sequelize('postgres://localhost:5432/wikistack', {
-//     logging: false
-// });
+const Sequelize = require('sequelize');
+const db = new Sequelize('postgres://localhost:5432/wikistack');
 
-var Page = db.define('page', { //the actual table is called pages soo can this first param technically be whatever?? page is the tablename (an s will be added to it) and Page is the class name(which is what we use to get data back ex from this class get me this)
+var Page = db.define('page', {
     title: {
-        type: Sequelize.STRING, //is there only a char limit if you give it a limit? also string is limited in length you think but double check
+        type: Sequelize.STRING, 
         allowNull: false
     },
     urlTitle: {
         type: Sequelize.STRING,
-        allowNull: false
+         allowNull: false
     },
     content: {
-        type: Sequelize.TEXT, //not limited at all in length?
-        allowNull: false
+        type: Sequelize.TEXT,
+         allowNull: false
     },
     status: {
-        type: Sequelize.ENUM('open', 'closed') //status can either be set to open or closed
-    },
-    date: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
-    } 
-},  { 
+        type: Sequelize.ENUM('open', 'closed'),
+        defaultValue: 'closed'
+    }
+}, {
     hooks: {
+
         beforeValidate: function(page) {
-            if (page.title) { //if there is a title...
-                // Removes all non-alphanumeric characters from title
-                // And make whitespace underscore
-                page.urlTitle = page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+            if (page.title) {
+                page.urlTitle = page.title.replace(/\s/g, '_').replace(/\W/g, '');
             } else {
-                // Generates random 5 letter string
-                return Math.random().toString(36).substring(2, 7);
+                page.urlTitle = Math.random().toString(36).substring(2, 7);
             }
-          
         }
     },
-    getterMethods: { //this is a virtual property - route is not actually visible in our table but can still
+    getterMethods: {
         route: function() {
-            return '/wiki/' + this.urlTitle;
+            return "/wiki/ + this.urlTitle";
         }
     }
+})
+
+Page.hook('beforeValidate', function (page) {
+    if (page.title) {
+        page.urlTitle = page.title.replace(/\s/g, '_').replace(/\W/g, '');
+    } else {
+        page.urlTitle = Math.random().toString(36).substring(2, 7);
+    }
 });
+
+
+
+
 
 var User = db.define('user', {
     name: {
         type: Sequelize.STRING,
-        allowNull: false 
+         allowNull: false
     },
     email: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true, 
-        validate: {
+         allowNull: false,
+         Validate: {
             isEmail: true
-        }
+         }
     }
-});
+})
 
+Page.belongsTo(User, {as: 'author'})
 
-module.exports = {db, Page, User} //I guess this is ES6 notation which is why the video shows it differently?
+module.exports = {db, Page, User}

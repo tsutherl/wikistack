@@ -1,7 +1,6 @@
 {
   "name": "wikistack",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "nodemon index.js"
@@ -9,9 +8,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "1.14.2",
+    "body-parser": "^1.14.2",
     "express": "^4.14.0",
-    "morgan": "1.6.1",
+    "morgan": "^1.6.1",
     "nunjucks": "^2.5.2",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
@@ -19,5 +18,15 @@
   },
   "devDependencies": {
     "nodemon": "^1.10.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsutherl/wikistack.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/tsutherl/wikistack/issues"
+  },
+  "homepage": "https://github.com/tsutherl/wikistack#readme",
+  "description": ""
 }
